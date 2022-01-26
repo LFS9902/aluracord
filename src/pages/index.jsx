@@ -1,8 +1,10 @@
-import GlobalStyle from '../components/styles/GlobalStyle'
 import Title from '../components/Title';
-
-import { Box, Button, Text, TextField, Image} from '@skynexui/components'
+import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../../config.json'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import imgBackground from '../../src/img/background.png';
+import imgNotFound from '../../src/img/notFound.png'
 
 // function HomePage() {
 //   return (
@@ -16,16 +18,32 @@ import appConfig from '../../config.json'
 
 // export default HomePage
 
+async function Api(user) {
+  const req = await fetch(`https://api.github.com/users/${user}`)
+  const data = await req.json()
+  return data
+}
+
 export default function HomePage() {
-  const username = 'LFS9902';
+  const [user, setUser] = useState('');
+  const [infoGit, setInfoGit] = useState({login: 'LFS9902', name: 'Luis Fernando'})
+  const router = useRouter()
+
+  function newUser(user) {
+    Api(user).then(resp => {
+      if (resp.message == 'Not Found') {
+        setInfoGit({})
+      }
+      setInfoGit(resp)
+    })
+  }
 
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundImage: 'url(https://pixabay.com/get/gb754aa93f78aecb8b5c2506ba232d139d03b95c8d310d1333f0275348b29fbe2164b7d3ba67539c05f49dd41568f918014da514d0a24523ebd35564daba36e257591e0f95d80cda922342ca9b80c2eef_1920.jpg)',
+          backgroundImage: `url(${imgBackground.src})`,
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
         }}
       >
@@ -47,18 +65,29 @@ export default function HomePage() {
           {/* Form */}
           <Box
             as="form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              if(infoGit.name){
+                router.push('/Chat')
+              } else {
+                alert('Insira seu usuário do GitHub!!!')
+              }
+            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
             }}
           >
-            <Title tag="h2" content="Seja bem-vindo(a)!"/>
+            <Title tag="h2" content="Seja bem-vindo(a)!" />
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
-              <p style={{marginTop: '10px'}}>Sua jornada começa aqui 🚀 </p>
+              <p style={{ marginTop: '10px' }}>Sua jornada começa aqui 🚀 </p>
             </Text>
 
             <TextField
               fullWidth
+              placeholder='Insira seu nome de usuário do GitHub'
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
               textFieldColors={{
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
@@ -78,6 +107,21 @@ export default function HomePage() {
                 mainColorLight: appConfig.theme.colors.primary[400],
                 mainColorStrong: appConfig.theme.colors.primary[600],
               }}
+            />
+            <Button
+              type='button'
+              label='Alterar Usuário'
+              fullWidth
+              buttonColors={{
+                contrastColor: appConfig.theme.colors.neutrals["000"],
+                mainColor: appConfig.theme.colors.primary[500],
+                mainColorLight: appConfig.theme.colors.primary[400],
+                mainColorStrong: appConfig.theme.colors.primary[600],
+              }}
+              styleSheet={{
+                marginTop: '10px'
+              }}
+              onClick={() => newUser(user)}
             />
           </Box>
           {/* Form */}
@@ -103,8 +147,10 @@ export default function HomePage() {
               styleSheet={{
                 borderRadius: '50%',
                 marginBottom: '16px',
+                width: '166px',
+                height: '166px'
               }}
-              src={`https://github.com/${username}.png`}
+              src={infoGit.name ? `https://github.com/${infoGit.login}.png` : imgNotFound.src}
             />
             <Text
               variant="body4"
@@ -115,7 +161,7 @@ export default function HomePage() {
                 borderRadius: '1000px'
               }}
             >
-              {username}
+              {infoGit.name ? infoGit.name : 'Não encontrado'}
             </Text>
           </Box>
           {/* Photo Area */}
