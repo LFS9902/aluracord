@@ -1,40 +1,22 @@
 import Title from '../components/Title';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../../config.json'
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import imgBackground from '../../src/img/background.png';
 import imgNotFound from '../../src/img/notFound.png'
-
-// function HomePage() {
-//   return (
-//     <div>
-//       <GlobalStyle />
-//       <Title title='Boas vindas de volta' tag='h1' />
-//       <h3>Discord - Alura Matrix</h3>
-//     </div>
-//   )
-// }
-
-// export default HomePage
-
-async function Api(user) {
-  const req = await fetch(`https://api.github.com/users/${user}`)
-  const data = await req.json()
-  return data
-}
+import { AuthContext, Api } from '../components/providers/auth';
 
 export default function HomePage() {
-  const [user, setUser] = useState('');
-  const [infoGit, setInfoGit] = useState({login: 'LFS9902', name: 'Luis Fernando'})
   const router = useRouter()
+  const {user, setUser, infoGit, setInfoGit} = useContext(AuthContext)
 
   function newUser(user) {
     Api(user).then(resp => {
       if (resp.message == 'Not Found') {
         setInfoGit({})
       }
-      setInfoGit(resp)
+        setInfoGit(resp)
     })
   }
 
