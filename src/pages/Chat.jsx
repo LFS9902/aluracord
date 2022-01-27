@@ -1,5 +1,5 @@
 import { Box, TextField, Button } from '@skynexui/components';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import appConfig from '../../config.json';
 import imgBackground from '../../src/img/background.png';
 
@@ -8,7 +8,6 @@ import MessageList from '../components/chat/MessageList';
 import dateNow from '../components/chat/DateNow';
 
 import { createClient } from '@supabase/supabase-js';
-import { useEffect } from 'react/cjs/react.development';
 import { AuthContext } from '../components/providers/auth';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4MTE0NSwiZXhwIjoxOTU4ODU3MTQ1fQ.dCSV21zZAEES9OayAjG52TLt946pY4a7nWAOmls53Wk'
