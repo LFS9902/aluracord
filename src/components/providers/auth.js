@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 export const AuthContext = React.createContext({})
 
@@ -11,7 +11,7 @@ export async function Api(user) {
 export const AuthProvider = (props) => {
 
   const [user, setUser] = useState('')
-  const [infoGit, setInfoGit] = useState({login: 'LFS9902', name: 'Luis Fernando'})
+  const [infoGit, setInfoGit] = useState({name: 'Insira seu usuário', status: true})
 
   return (
     <AuthContext.Provider value={{user, setUser, infoGit, setInfoGit}}>

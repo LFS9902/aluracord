@@ -1,6 +1,10 @@
 import { Box, Text, Button } from '@skynexui/components';
+import { useContext } from 'react';
+import { AuthContext } from '../../components/providers/auth';
 
 export default function Header() {
+
+  const { setUser, setInfoGit } = useContext(AuthContext)
 
   return (
     <>
@@ -12,6 +16,10 @@ export default function Header() {
           variant='tertiary'
           colorVariant='neutral'
           label='Logout'
+          onClick={() => {
+            setUser('')
+            setInfoGit({name: 'Insira seu usuário', status: true}
+          )}}
           href="/"
         />
       </Box>

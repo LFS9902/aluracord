@@ -4,7 +4,8 @@ import appConfig from '../../config.json'
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import imgBackground from '../../src/img/background.png';
-import imgNotFound from '../../src/img/notFound.png'
+import imgNotFound from '../../src/img/notFound.png';
+import imgGitHub from '../../src/img/gitHub.png'
 import { AuthContext, Api } from '../components/providers/auth';
 
 export default function HomePage() {
@@ -49,7 +50,7 @@ export default function HomePage() {
             as="form"
             onSubmit={(e) => {
               e.preventDefault()
-              if(infoGit.name){
+              if(infoGit.login){
                 router.push('/Chat')
               } else {
                 alert('Insira seu usuário do GitHub!!!')
@@ -132,7 +133,7 @@ export default function HomePage() {
                 width: '166px',
                 height: '166px'
               }}
-              src={infoGit.name ? `https://github.com/${infoGit.login}.png` : imgNotFound.src}
+              src={infoGit.login ? `https://github.com/${infoGit.login}.png` : infoGit.status ? imgGitHub.src : imgNotFound.src}
             />
             <Text
               variant="body4"
