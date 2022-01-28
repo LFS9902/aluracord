@@ -25,7 +25,7 @@ export default function Header() {
           Olá, {infoGit.name}!
         </Text>
         </Box>
-        <Text variant='heading5'>
+        <Text variant='heading4'>
           Chat
         </Text>
         <Button

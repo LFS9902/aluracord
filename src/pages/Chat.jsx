@@ -6,14 +6,20 @@ import imgBackground from '../../src/img/background.png';
 import Header from '../components/chat/Header';
 import MessageList from '../components/chat/MessageList';
 import dateNow from '../components/chat/DateNow';
+import ButtonSendSticker from '../components/chat/ButtonSendStickers';
 
 import { createClient } from '@supabase/supabase-js';
 import { AuthContext } from '../components/providers/auth';
-import { useRouter } from 'next/router';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4MTE0NSwiZXhwIjoxOTU4ODU3MTQ1fQ.dCSV21zZAEES9OayAjG52TLt946pY4a7nWAOmls53Wk'
 const SUPABASE_URL = 'https://oveqdqsqcyvqfzzsmacf.supabase.co'
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+function listenToMessages(addMessage){
+  return supabaseClient.from('messages').on('INSERT', (data) => {
+    addMessage(data.new)
+  }).subscribe()
+}
 
 export default function ChatPage() {
   const [message, setMessage] = useState('')
@@ -21,11 +27,18 @@ export default function ChatPage() {
 
   const { infoGit } = useContext(AuthContext)
 
-  const router = useRouter()
-
   useEffect(() => {
     const datasSupabase = supabaseClient.from('messages').select('*').order('id', { ascending: false })
       .then(({ data }) => setListMessage(data))
+
+      listenToMessages((newMessage) => {
+        setListMessage((currentList) => {
+          return [
+            newMessage,
+            ...currentList
+          ]
+        })
+      })
   }, [])
 
   function handleNewMessage(newMessage) {
@@ -36,12 +49,7 @@ export default function ChatPage() {
       login: infoGit.login
     }
 
-    supabaseClient.from('messages').insert([message]).then(({ data }) => {
-      setListMessage([
-        data[0],
-        ...listMessage
-      ])
-    })
+    supabaseClient.from('messages').insert([message]).then()
     setMessage('')
   }
 
@@ -90,6 +98,8 @@ export default function ChatPage() {
               styleSheet={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 5px',
               }}
             >
               <TextField
@@ -113,13 +123,22 @@ export default function ChatPage() {
                   borderRadius: '5px',
                   padding: '6px 8px',
                   backgroundColor: appConfig.theme.colors.neutrals[800],
-                  marginRight: '12px',
+                  marginRight: '4px',
+                  marginTop: '10px',
                   color: appConfig.theme.colors.neutrals[200],
                 }}
               />
+
+              <ButtonSendSticker onClickSticker={(sticker) => {
+                handleNewMessage(`:sticker:${sticker}`)
+              }} />
+
               <Button
                 type='button'
                 label='Enviar'
+                styleSheet={{
+                  height: '70%'
+                }}
                 onClick={() => message.length > 0 && handleNewMessage(message)}
                 buttonColors={{
                   contrastColor: appConfig.theme.colors.neutrals["000"],

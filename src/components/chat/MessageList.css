@@ -12,3 +12,14 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+::-webkit-scrollbar-thumb{
+  background-color: #181F25;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar{
+  background-color: #29333D;
+  width: 10px;
+  border-radius: 10px;
+}

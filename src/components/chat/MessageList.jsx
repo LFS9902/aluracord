@@ -20,7 +20,7 @@ export default function MessageList({ messages }) {
       <Box
         tag="ul"
         styleSheet={{
-          overflow: 'scroll',
+          overflow: 'auto',
           overflowX: 'hidden',
           display: 'flex',
           flexDirection: 'column-reverse',
@@ -39,6 +39,7 @@ export default function MessageList({ messages }) {
                 borderRadius: '5px',
                 padding: '6px',
                 marginBottom: '12px',
+                marginRight: '5px',
                 hover: {
                   backgroundColor: appConfig.theme.colors.neutrals[700],
                 },
@@ -91,7 +92,14 @@ export default function MessageList({ messages }) {
                   /> */}
                 </Box>
               </Box>
-              {message.messageText}
+
+              {message.messageText.startsWith(':sticker:')
+                ? (<Image src={message.messageText.replace(':sticker:', '')} styleSheet={{
+                  width: '100px',
+                  height: '100px',
+                }}/>) 
+                : (message.messageText)
+              }
             </Text>
           )
         })
