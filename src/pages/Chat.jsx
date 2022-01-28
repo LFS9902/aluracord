@@ -10,12 +10,13 @@ import ButtonSendSticker from '../components/chat/ButtonSendStickers';
 
 import { createClient } from '@supabase/supabase-js';
 import { AuthContext } from '../components/providers/auth';
+import Title from '../components/Title';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4MTE0NSwiZXhwIjoxOTU4ODU3MTQ1fQ.dCSV21zZAEES9OayAjG52TLt946pY4a7nWAOmls53Wk'
 const SUPABASE_URL = 'https://oveqdqsqcyvqfzzsmacf.supabase.co'
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-function listenToMessages(addMessage){
+function listenToMessages(addMessage) {
   return supabaseClient.from('messages').on('INSERT', (data) => {
     addMessage(data.new)
   }).subscribe()
@@ -31,14 +32,14 @@ export default function ChatPage() {
     const datasSupabase = supabaseClient.from('messages').select('*').order('id', { ascending: false })
       .then(({ data }) => setListMessage(data))
 
-      listenToMessages((newMessage) => {
-        setListMessage((currentList) => {
-          return [
-            newMessage,
-            ...currentList
-          ]
-        })
+    listenToMessages((newMessage) => {
+      setListMessage((currentList) => {
+        return [
+          newMessage,
+          ...currentList
+        ]
       })
+    })
   }, [])
 
   function handleNewMessage(newMessage) {
@@ -53,8 +54,15 @@ export default function ChatPage() {
     setMessage('')
   }
 
+  async function deleteMessage(id){
+    await supabaseClient.from('messages').delete().match({id})
+    await supabaseClient.from('messages').select('*').order('id', { ascending: false })
+    .then(({ data }) => setListMessage(data))
+  }
+
   if (infoGit.id) {
     return (
+
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -91,7 +99,7 @@ export default function ChatPage() {
             }}
           >
 
-            <MessageList messages={listMessage} />
+            <MessageList messages={listMessage} deleteMessage={deleteMessage}/>
 
             <Box
               as="form"
@@ -150,9 +158,10 @@ export default function ChatPage() {
             </Box>
           </Box>
         </Box>
+        <Title title="Chat" />
       </Box>
     )
   } else {
-    return <></>
+    return <><Title title="Error" /></>
   }
 }

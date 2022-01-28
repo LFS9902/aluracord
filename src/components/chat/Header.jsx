@@ -29,8 +29,12 @@ export default function Header() {
           Chat
         </Text>
         <Button
-          variant='tertiary'
-          colorVariant='neutral'
+          buttonColors={{
+            contrastColor: '#FFFFFF',
+            mainColor: '#c21e47',
+            mainColorLight: '#d4214e',
+            mainColorStrong: '#af1b3f',
+          }}
           label='Logout'
           onClick={() => {
             setUser('')

@@ -44,6 +44,7 @@ export default function ButtonSendSticker({ onClickSticker }) {
             styleSheet={{
               color: appConfig.theme.colors.neutrals["000"],
               fontWeight: 'bold',
+              marginBottom: '5px'
             }}
           >
             Stickers

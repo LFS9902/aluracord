@@ -1,18 +1,21 @@
 import { Box, Text, Image, Button } from '@skynexui/components';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import appConfig from '../../../config.json';
+import { AuthContext } from '../providers/auth';
 
 
-export default function MessageList({ messages }) {
+export default function MessageList({ messages, deleteMessage }) {
 
   const [loader, setLoader] = useState(true)
 
+  const { infoGit } = useContext(AuthContext)
+
   setTimeout(() => {
     setLoader(false)
-  },1000)
+  }, 1000)
 
-  if(loader){
-    return(
+  if (loader) {
+    return (
       <div className='loader'></div>
     )
   } else {
@@ -29,7 +32,7 @@ export default function MessageList({ messages }) {
           marginBottom: '16px',
         }}
       >
-  
+
         {messages.map((message) => {
           return (
             <Text
@@ -79,17 +82,22 @@ export default function MessageList({ messages }) {
                 </Box>
                 <Box>
                   {/* Futura Implementação */}
-                  {/* <Button
+                  {infoGit.login === message.login && (<Button
                     type='button'
                     label='X'
-                    
+                    styleSheet={{
+                      width: '20px',
+                      height: '10px'
+                    }}
                     buttonColors={{
                       contrastColor: appConfig.theme.colors.neutrals["000"],
-                      mainColor: appConfig.theme.colors.primary[500],
-                      mainColorLight: appConfig.theme.colors.primary[400],
-                      mainColorStrong: appConfig.theme.colors.primary[600],
+                      mainColor: '#c21e47',
+                      mainColorLight: '#d4214e',
+                      mainColorStrong: '#af1b3f',
                     }}
-                  /> */}
+                    onClick={() => deleteMessage(message.id)}
+                  />)}
+
                 </Box>
               </Box>
 
@@ -97,13 +105,14 @@ export default function MessageList({ messages }) {
                 ? (<Image src={message.messageText.replace(':sticker:', '')} styleSheet={{
                   width: '100px',
                   height: '100px',
-                }}/>) 
+                }} />)
                 : (message.messageText)
               }
             </Text>
           )
         })
+        }
+      </Box>
+    )
   }
-    </Box>
-  )}
 }

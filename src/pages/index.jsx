@@ -18,15 +18,16 @@ export default function HomePage() {
         setInfoGit({})
       } else {
         setInfoGit(resp)
-        setTimeout(()=> {
+        setTimeout(() => {
           router.push(`/Chat`)
-        },700)
+        }, 700)
       }
     })
   }
 
   return (
     <>
+      <Title title="Aluracord" />
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -57,7 +58,12 @@ export default function HomePage() {
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
             }}
           >
-            <Title tag="h2" content="Seja bem-vindo(a)!" />
+
+            <Text tag='h2' variant='heading1' styleSheet={{
+              color: `${appConfig.theme.colors.primary['300']}`,
+              fontSize: '24px',
+            }}>Seja bem-vindo(a)!</Text>
+
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
               <p style={{ marginTop: '10px' }}>Sua jornada começa aqui 🚀 </p>
             </Text>

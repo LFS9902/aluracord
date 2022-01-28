@@ -1,21 +1,9 @@
-import appConfig from '../../config.json'
+import Head from "next/head";
 
-export default function Title({ content, tag }) {
-  const Tag = tag
-
+export default function Title({ title }) {
   return (
-    <>
-      <Tag>
-        {content}
-      </Tag>
-
-      <style jsx>{`
-        ${Tag}{
-          color: ${appConfig.theme.colors.primary['300']};
-          font-size: 24px;
-          font-weight: 600;
-        }
-      `}</style>
-    </>
+    <Head>
+      <title>{title}</title>
+    </Head>
   )
 }
