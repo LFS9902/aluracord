@@ -10,14 +10,18 @@ import { AuthContext, Api } from '../components/providers/auth';
 
 export default function HomePage() {
   const router = useRouter()
-  const {user, setUser, infoGit, setInfoGit} = useContext(AuthContext)
+  const { user, setUser, infoGit, setInfoGit } = useContext(AuthContext)
 
   function newUser(user) {
     Api(user).then(resp => {
       if (resp.message == 'Not Found') {
         setInfoGit({})
-      }
+      } else {
         setInfoGit(resp)
+        setTimeout(()=> {
+          router.push(`/Chat`)
+        },700)
+      }
     })
   }
 
@@ -48,14 +52,6 @@ export default function HomePage() {
           {/* Form */}
           <Box
             as="form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              if(infoGit.login){
-                router.push('/Chat')
-              } else {
-                alert('Insira seu usuário do GitHub!!!')
-              }
-            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -70,6 +66,12 @@ export default function HomePage() {
               fullWidth
               placeholder='Insira seu nome de usuário do GitHub'
               value={user}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault()
+                  user.length > 0 && newUser(user)
+                }
+              }}
               onChange={(e) => setUser(e.target.value)}
               textFieldColors={{
                 neutral: {
@@ -81,19 +83,10 @@ export default function HomePage() {
               }}
             />
             <Button
-              type='submit'
-              label='Entrar'
-              fullWidth
-              buttonColors={{
-                contrastColor: appConfig.theme.colors.neutrals["000"],
-                mainColor: appConfig.theme.colors.primary[500],
-                mainColorLight: appConfig.theme.colors.primary[400],
-                mainColorStrong: appConfig.theme.colors.primary[600],
-              }}
-            />
-            <Button
               type='button'
-              label='Alterar Usuário'
+              label='Entrar'
+              disabled={user.length < 1 && true}
+              onClick={() => newUser(user)}
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
@@ -101,14 +94,9 @@ export default function HomePage() {
                 mainColorLight: appConfig.theme.colors.primary[400],
                 mainColorStrong: appConfig.theme.colors.primary[600],
               }}
-              styleSheet={{
-                marginTop: '10px'
-              }}
-              onClick={() => newUser(user)}
             />
           </Box>
           {/* Form */}
-
 
           {/* Photo Area */}
           <Box
