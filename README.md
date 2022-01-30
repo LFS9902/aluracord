@@ -20,12 +20,12 @@ yarn install
 
 After installing the dependencies, run the following commands to start the local server:
 
--npm:
+- npm:
 ```sh
 npm run dev
 ```
 
--yarn:
+- yarn:
 ```sh
 yarn dev
 ```
